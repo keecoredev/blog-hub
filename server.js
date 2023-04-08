@@ -7,3 +7,5 @@ app.get('/', (req,res) => {
     res.send('My Lite Express Server');
 })
 
+module.exports = { app };
+
