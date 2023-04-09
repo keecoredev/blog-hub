@@ -21,6 +21,11 @@ database.once('open', function() {
 const registerRouter = require('./routes/register');
 
 // middleware
+
+app.get('/', async (req,res) => {
+    res.json("REST express server");
+});
+
 app.use('/register', registerRouter);
 
 app.listen(process.env.SERVER_PORT);
