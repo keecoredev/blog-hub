@@ -23,7 +23,9 @@ const registerRouter = require('./routes/register');
 // middleware
 app.use('/register', registerRouter);
 
-app.get('/', res.json('Restful express server'));
+app.get('/', async function(){
+    res.json('Restful express server');
+});
 
 app.listen(process.env.SERVER_PORT);
 
