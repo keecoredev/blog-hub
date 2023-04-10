@@ -1,8 +1,12 @@
 // server inits
 const express = require('express');
 const app = express();
-app.listen(3000);
+const bodyParser  = require('body-parser');
 require("dotenv").config();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
 // db inits
 const mongoose = require('mongoose');
 mongoose.connect(process.env.CLOUD_URI, {useNewUrlParser: true, useUnifiedTopology: true});
@@ -13,9 +17,18 @@ database.once('open', function() {
     console.log('Server has connected to database successfully');
 });
 
-app.get('/', (req,res) => {
-    res.send('My Lite Express Server');
+// routes inits
+const registerRouter = require('./routes/register');
+
+// middleware
+
+app.get('/', async (req,res) => {
+    res.json("REST express server");
 });
+
+app.use('/register', registerRouter);
+
+app.listen(process.env.SERVER_PORT);
 
 module.exports = { app };
 
