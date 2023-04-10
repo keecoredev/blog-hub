@@ -4,11 +4,11 @@ const bcrypt = require('bcrypt');
 const registerController = async(req, res) => {
     try{
 
-        if(await User.findOne({email: req.body.email}) != null){
+        if(await User.findOne({email: req.body.email})){
             return res.status(400).json({message: 'This email was already taken'});
         }
 
-        if(await User.findOne({username:req.body.username}) != null){
+        if(await User.findOne({username:req.body.username})){
             return res.status(400).json({message: 'This username was already taken'});
         }
 
@@ -28,4 +28,19 @@ const registerController = async(req, res) => {
     }
 }
 
-module.exports = { registerController };
+const loginController = async(req,res) => {
+    try{
+        const user = await User.findOne({email: req.body.email});
+
+        !user
+            ? res.status(404).json({message: 'User is not found'})
+        : !await bcrypt.compare(req.body.password, user.password)
+            ? res.status(400).json({message: 'Password is incorrect'})
+        : res.status(200).json(user);
+    }
+    catch(error){
+        res.status(400).json({message: error.message});
+    }
+}
+
+module.exports = { registerController, loginController };
