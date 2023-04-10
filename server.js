@@ -18,15 +18,16 @@ database.once('open', function() {
 });
 
 // routes inits
-const registerRouter = require('./routes/register');
+const RegisterRouter = require('./routes/auth/register');
+const LoginRouter = require('./routes/auth/login');
 
-// middleware
-
+// middleware inits
 app.get('/', async (req,res) => {
     res.json("REST express server");
 });
 
-app.use('/register', registerRouter);
+app.use('/register', RegisterRouter);
+app.use('/login', LoginRouter);
 
 app.listen(process.env.SERVER_PORT);
 
