@@ -3,6 +3,15 @@ const bcrypt = require('bcrypt');
 
 const registerController = async(req, res) => {
     try{
+
+        if(await User.findOne({email: req.body.email}) != null){
+            return res.status(400).json({message: 'This email was already taken'});
+        }
+
+        if(await User.findOne({username:req.body.username}) != null){
+            return res.status(400).json({message: 'This username was already taken'});
+        }
+
         const cryptedPassword = await bcrypt.hash(req.body.password,10);
 
         const newUserRecord = await new User({
