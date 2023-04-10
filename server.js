@@ -21,10 +21,10 @@ database.once('open', function() {
 const registerRouter = require('./routes/register');
 
 // middleware
-app.get('/', (req,res) => {
-    res.send('Express Restful Server');
-});
 
+app.get('/', async (req,res) => {
+    res.json("REST express server");
+});
 
 app.use('/register', registerRouter);
 
