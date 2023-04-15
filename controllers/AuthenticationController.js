@@ -33,7 +33,7 @@ const loginController = async(req,res) => {
         const user = await User.findOne({email: req.body.email});
 
         !user
-            ? res.status(404).json({message: 'User is not found'})
+            ? res.status(422).json({message: 'User is not found'})
         : !await bcrypt.compare(req.body.password, user.password)
             ? res.status(400).json({message: 'Password is incorrect'})
         : res.status(200).json(user);
