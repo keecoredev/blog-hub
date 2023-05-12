@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-
+const Token = require("../models/Token");
 
 const tokenController = async (req,res) => {
     try{

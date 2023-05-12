@@ -20,6 +20,7 @@ database.once('open', function() {
 // routes inits
 const RegisterRouter = require('./routes/auth/register');
 const LoginRouter = require('./routes/auth/login');
+const TokenRouter = require('./routes/auth/token');
 
 // middleware inits
 app.get('/', async (req,res) => {
@@ -28,6 +29,34 @@ app.get('/', async (req,res) => {
 
 app.use('/register', RegisterRouter);
 app.use('/login', LoginRouter);
+// refresh token endpoint
+app.use("/token",TokenRouter);
+
+// TEST valid user's data starts
+const jwt = require("jsonwebtoken");
+app.get("/authorizated",authorizedTokenMiddleware,(req,res) => {
+    res.status(200).json(req.user.user);
+});
+
+function authorizedTokenMiddleware (req,res,next) {
+    const bearerHeader = req.headers["authorization"];
+    if(bearerHeader === null || bearerHeader === "undefined"){
+        return res.status(404).json({message:"There is no Authorization Header on request"});
+    }
+    const token = bearerHeader.split(" ")[1];
+    if (token === null || token === "undefined"){
+        return res.status(404).json({message:"There is no token o header"});
+    }
+    jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,user) => {
+        if (err){
+            return res.status(403).json({message:err.message})
+        }
+        req.user = user;
+        next();
+    })
+}
+
+// TEST valid user's data ends
 
 app.listen(process.env.SERVER_PORT);
 
