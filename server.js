@@ -17,6 +17,8 @@ database.once('open', function() {
     console.log('Server has connected to database successfully');
 });
 
+const Token = require('./models/Token');
+
 // routes inits
 const RegisterRouter = require('./routes/auth/register');
 const LoginRouter = require('./routes/auth/login');
@@ -31,6 +33,15 @@ app.use('/register', RegisterRouter);
 app.use('/login', LoginRouter);
 // refresh token endpoint
 app.use("/token",TokenRouter);
+app.delete("/logout", async (req,res) => {
+    try{
+        const accessToken = req.body.token;
+        const deletedToken = await Token.deleteOne({token:accessToken});
+        res.json(deletedToken);
+    }catch(err){
+        res.status(400).json({message:err.message});
+    }
+});
 
 // TEST valid user's data starts
 const jwt = require("jsonwebtoken");
