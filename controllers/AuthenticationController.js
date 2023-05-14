@@ -44,11 +44,11 @@ const loginController = async(req,res) => {
         }
 
         const accessToken = generateAccessToken(user);
-        const refreshToken = jwt.sign({user:user},process.env.REFRESH_TOKEN_SECRET);
+        // const refreshToken = jwt.sign({user:user},process.env.REFRESH_TOKEN_SECRET);
 
-        await Token.create({token:refreshToken});
+        await Token.create({token:accessToken});
 
-        res.status(200).json({accessToken:accessToken,refreshToken:refreshToken});
+        res.status(200).json({accessToken:accessToken});
 
     } catch(err){
         res.status(400).json({message:err.message});
@@ -56,7 +56,7 @@ const loginController = async(req,res) => {
 }
 
 function generateAccessToken(user){
-    return jwt.sign({user:user},process.env.ACCESS_TOKEN_SECRET,{expiresIn:"30m"});
+    return jwt.sign({user:user},process.env.ACCESS_TOKEN_SECRET,{});
 }
 
 module.exports = { registerController, loginController };
