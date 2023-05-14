@@ -4,6 +4,11 @@ const app = express();
 const bodyParser  = require('body-parser');
 require("dotenv").config();
 
+// cors policy
+const cors = require("cors");
+app.use(cors({origin: 'https://blog-hub-chi.vercel.app', methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']})
+);
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
