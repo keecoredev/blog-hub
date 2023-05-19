@@ -12,7 +12,13 @@ const postSchema = mongoose.Schema({
         required: true
     },
     createdDate: {
-        type: Date.now()
+        type:Date,
+        default: Date.now()
+    },
+    likes: {
+        type:Number,
+        required: true,
+        default: 0
     },
     owner: {
         type: mongoose.SchemaTypes.ObjectId,
