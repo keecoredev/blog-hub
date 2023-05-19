@@ -28,6 +28,7 @@ const Token = require('./models/Token');
 const RegisterRouter = require('./routes/auth/register');
 const LoginRouter = require('./routes/auth/login');
 const TokenRouter = require('./routes/auth/token');
+const PostRouter = require('./routes/blog/post');
 
 // middleware inits
 app.get('/', async (req,res) => {
@@ -47,6 +48,7 @@ app.delete("/logout", async (req,res) => {
         res.status(400).json({message:err.message});
     }
 });
+app.use('/posts', PostRouter);
 
 // TEST valid user's data starts
 const jwt = require("jsonwebtoken");
