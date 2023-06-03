@@ -2,7 +2,7 @@ const Post = require('../models/Post');
 
 const getPostsController = async (req,res) => {
     try{
-        const posts = await Post.find().skip(req.query.skip).limit(5);
+        const posts = await Post.find().populate('owner').skip(req.query.skip).limit(5);
 
         if (req.user){
 
