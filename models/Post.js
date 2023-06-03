@@ -23,7 +23,25 @@ const postSchema = mongoose.Schema({
     owner: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: "User"
-    }
+    },
+    isLikable: {
+        type: Boolean,
+        default: false
+    },
+    isDisLikable: {
+        type: Boolean,
+        default: false
+    },
+    likedBy: [
+        {
+            type: String
+        }
+    ],
+    dislikedBy: [
+        {
+            type: String
+        }
+    ]
 });
 
 
