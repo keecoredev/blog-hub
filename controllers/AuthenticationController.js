@@ -48,7 +48,7 @@ const loginController = async(req,res) => {
 
         await Token.create({token:accessToken});
 
-        res.status(200).json({accessToken:accessToken});
+        res.status(200).json({accessToken:accessToken, userProfile:user});
 
     } catch(err){
         res.status(400).json({message:err.message});
