@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const postSchema = mongoose.Schema({
     title: {
         type: String,
-        maxlength: 64,
+        maxlength: 128,
         required: true
     },
     description: {
@@ -11,37 +11,28 @@ const postSchema = mongoose.Schema({
         maxlength: 1024,
         required: true
     },
+    content: {
+        type: String,
+        required: true
+    },
     createdDate: {
         type:Date,
         default: Date.now()
     },
-    likes: {
+    likes_count: {
         type:Number,
         required: true,
         default: 0
     },
     owner: {
         type: mongoose.SchemaTypes.ObjectId,
-        ref: "User"
+        ref: "User",
+        required: true
     },
-    isLikable: {
+    liked: {
         type: Boolean,
         default: false
-    },
-    isDisLikable: {
-        type: Boolean,
-        default: false
-    },
-    likedBy: [
-        {
-            type: String
-        }
-    ],
-    dislikedBy: [
-        {
-            type: String
-        }
-    ]
+    }
 });
 
 
