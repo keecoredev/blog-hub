@@ -57,7 +57,7 @@ const likePostController = async (req, res) => {
             const post = await Post.findById(req.params.postID);
             const postLikeDb = await PostLike.find({'post': req.params.postID, 'owner': req.user.user._id});
 
-            if (req.params.liked == 'true' && postLikeDb.length < 1){
+            if (req.query.liked == 'true' && postLikeDb.length < 1){
 
                 const newPostLike = await new PostLike({
                     post: req.params.postID,
@@ -72,7 +72,7 @@ const likePostController = async (req, res) => {
                 return res.status(201).json(newPostLike);
             }
 
-            if (postLikeDb.length >= 1 && req.params.liked == 'false'){
+            if (postLikeDb.length >= 1 && req.query.liked == 'false'){
                 const deletedDoc = await PostLike.deleteOne({ id: postLikeDb.id});
 
                 post.likes_count -= 1;
@@ -81,12 +81,12 @@ const likePostController = async (req, res) => {
                 return res.status(200).json(deletedDoc);
             }
 
-            if (req.params.liked == 'false' && postLikeDb.length < 1){
+            if (req.query.liked == 'false' && postLikeDb.length < 1){
 
                 return res.status(400).json({message:'Bad Request'});
             }
 
-            if (postLikeDb.length >= 1 && req.params.liked == 'true'){
+            if (postLikeDb.length >= 1 && req.query.liked == 'true'){
                 return res.status(400).json({message:'You can like only once!'});
             }
 
