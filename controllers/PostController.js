@@ -15,14 +15,14 @@ const getPostsController = async (req,res) => {
             const likedPostsByUser = await PostLike.find({'post': { $in: postIds }, 'owner': req.user.user._id})
                 .distinct('post');
 
-            let manipulatedPosts = [];
+            const manipulatedPosts = new Set();
 
             if (likedPostsByUser.length > 0){
                 posts.map((post) => {
                     likedPostsByUser.forEach((id) => {
                         if (post._id.toString() == id){
                             post.liked = true;
-                            manipulatedPosts.push(new PostDTO(post));
+                            manipulatedPosts.add(new PostDTO(post));
                         }
                     })
                 });
@@ -30,12 +30,12 @@ const getPostsController = async (req,res) => {
                 posts.map((post) => {
                     likedPostsByUser.forEach((id) => {
                         if (post._id.toString() != id){
-                            manipulatedPosts.push(new PostDTO(post));
+                            manipulatedPosts.add(new PostDTO(post));
                         }
                     })
                 });
 
-                return res.status(200).json(manipulatedPosts);
+                return res.status(200).json(Array.from(manipulatedPosts));
             }
 
             else {
