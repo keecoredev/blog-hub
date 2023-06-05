@@ -127,7 +127,7 @@ const createPostController = async (req, res) => {
 const getMyPostsController = async (req, res) => {
     try{
         if (req.user){
-            const posts = await Post.find({owner: req.user.user._id}).populate('owner').skip(req.query.skip).limit(5);
+            const myPosts = await Post.find({owner: req.user.user._id}).populate('owner').skip(req.query.skip).limit(5);
             let transformedObject = [];
             myPosts.forEach((post) => {
                 transformedObject.push(new PostDTO(post));
