@@ -7,6 +7,7 @@ module.exports = class PostDTO {
     createdDate;
     username;
     likes_count;
+    liked;
 
     constructor(postObject){
         this.id = postObject._id;
@@ -15,6 +16,7 @@ module.exports = class PostDTO {
         this.content = postObject.content;
         this.createdDate = postObject.createdDate;
         this.username = postObject.owner.username;
-        this.likes_count = this.likes_count;
+        this.likes_count = postObject.likes_count;
+        this.liked = postObject.liked;
     }
 }
