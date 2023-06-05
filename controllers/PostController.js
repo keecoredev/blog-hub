@@ -1,5 +1,6 @@
 const Post = require('../models/Post');
 const PostLike = require('../models/PostLike');
+const PostDTO = require('../DTO/PostDTO.js');
 
 const getPostsController = async (req,res) => {
     try{
@@ -14,14 +15,14 @@ const getPostsController = async (req,res) => {
             const likedPostsByUser = await PostLike.find({'post': { $in: postIds }, 'owner': req.user.user._id})
                 .distinct('post');
 
-            let manipulatedPosts = [];
+            const manipulatedPosts = new Set();
 
             if (likedPostsByUser.length > 0){
                 posts.map((post) => {
                     likedPostsByUser.forEach((id) => {
                         if (post._id.toString() == id){
                             post.liked = true;
-                            manipulatedPosts.push(post);
+                            manipulatedPosts.add(new PostDTO(post));
                         }
                     })
                 });
@@ -29,12 +30,12 @@ const getPostsController = async (req,res) => {
                 posts.map((post) => {
                     likedPostsByUser.forEach((id) => {
                         if (post._id.toString() != id){
-                            manipulatedPosts.push(post);
+                            manipulatedPosts.add(new PostDTO(post));
                         }
                     })
                 });
 
-                return res.status(200).json(manipulatedPosts);
+                return res.status(200).json(Array.from(manipulatedPosts));
             }
 
             else {
@@ -123,4 +124,22 @@ const createPostController = async (req, res) => {
     }
 }
 
-module.exports = { getPostsController, likePostController, createPostController };
+const getMyPostsController = async (req, res) => {
+    try{
+        if (req.user){
+            const myPosts = await Post.find({owner: req.user.user._id}).populate('owner').skip(req.query.skip).limit(5);
+            let transformedObject = [];
+            myPosts.forEach((post) => {
+                transformedObject.push(new PostDTO(post));
+            })
+            res.status(200).json(transformedObject);
+        } else {
+            return res.status(403).json({message: 'You are not allowed to do this'});
+        }
+
+    } catch(err){
+        return res.status(200).json({message:err.message});
+    }
+}
+
+module.exports = { getPostsController, likePostController, createPostController, getMyPostsController };
