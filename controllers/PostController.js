@@ -11,6 +11,7 @@ const getPostsController = async (req,res) => {
         });
 
         let manipulatedPosts = new Set();
+        let storedPostIds = new Set();
 
         if (req.user){
 
@@ -23,14 +24,16 @@ const getPostsController = async (req,res) => {
                         if (post._id.toString() == id){
                             post.liked = true;
                             manipulatedPosts.add(new PostDTO(post));
+                            storedPostIds.add(post.id);
                         }
                     })
                 });
 
                 posts.map((post) => {
                     likedPostsByUser.forEach((id) => {
-                        if (post._id.toString() != id){
+                        if (post._id.toString() != id && !storedPostIds.has(post.id)){
                             manipulatedPosts.add(new PostDTO(post));
+                            storedPostIds.add(post.id);
                         }
                     })
                 });
