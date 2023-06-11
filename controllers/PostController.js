@@ -95,7 +95,9 @@ const likePostController = async (req, res) => {
                 post.likes_count -= 1;
                 post.save();
 
-                return res.status(200).json(post);
+                post.liked = false;
+
+                return res.status(200).json(new PostDTO(post));
             }
 
             if (req.query.liked == 'false' && postLikeDb.length < 1){
