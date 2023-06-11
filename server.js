@@ -6,7 +6,7 @@ require("dotenv").config();
 
 // cors policy
 const cors = require("cors");
-app.use(cors({origin: 'https://blog-hub-chi.vercel.app', methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']})
+app.use(cors({origin: 'https://blog-hub-chi.vercel.app', methods: ['GET','POST','DELETE','PUT','PATCH']})
 );
 
 app.use(bodyParser.json());
