@@ -69,7 +69,7 @@ const likePostController = async (req, res) => {
     try{
 
         if (req.user){
-            const post = await Post.findById(req.params.postID);
+            const post = await Post.findById(req.params.postID).populate('owner');
             const postLikeDb = await PostLike.find({'post': req.params.postID, 'owner': req.user.user._id});
 
             if (req.query.liked == 'true' && postLikeDb.length < 1){
@@ -84,7 +84,9 @@ const likePostController = async (req, res) => {
                 post.likes_count += 1;
                 post.save();
 
-                return res.status(201).json(newPostLike);
+                post.liked = true;
+
+                return res.status(201).json(new PostDTO(post));
             }
 
             if (postLikeDb.length >= 1 && req.query.liked == 'false'){
