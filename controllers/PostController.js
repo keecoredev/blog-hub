@@ -82,7 +82,7 @@ const likePostController = async (req, res) => {
                 newPostLike.save();
 
                 post.likes_count += 1;
-                post.save();
+                await post.save();
 
                 post.liked = true;
 
@@ -93,7 +93,7 @@ const likePostController = async (req, res) => {
                 const deletedDoc = await PostLike.deleteOne({ id: postLikeDb.id});
 
                 post.likes_count -= 1;
-                post.save();
+                await post.save();
 
                 post.liked = false;
 
@@ -129,7 +129,7 @@ const createPostController = async (req, res) => {
                 content: req.body.content
             });
 
-            newPost.save();
+            await newPost.save();
 
             return res.status(200).json({message: 'Post has been created successfully', newPost: newPost});
         }
@@ -145,7 +145,13 @@ const createPostController = async (req, res) => {
 const getMyPostsController = async (req, res) => {
     try{
         if (req.user){
-            const myPosts = await Post.find({owner: req.user.user._id}).populate('owner').skip(req.query.skip).limit(5);
+            let myPosts;
+            if (req.query.skip) {
+                myPosts = await Post.find({owner: req.user.user._id}).populate('owner').skip(req.query.skip).limit(5);
+            } else {
+                myPosts = await Post.find({owner: req.user.user._id}).populate('owner');
+            }
+
             let transformedObject = [];
             myPosts.forEach((post) => {
                 transformedObject.push(new PostDTO(post));
